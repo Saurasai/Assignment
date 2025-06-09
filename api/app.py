@@ -1,3 +1,25 @@
+import os
+import requests
+
+MODEL_URL = "https://www.dropbox.com/scl/fi/xr2z9v6e7ru31fs4u5m2v/price_predictor.pkl?rlkey=0r4df2i2iprbuseg22bkloliu&st=4r38e071&dl=1"
+MODEL_PATH = "models/price_predictor.pkl"
+
+def download_model():
+    if not os.path.exists(MODEL_PATH):
+        print("Downloading model from Dropbox...")
+        os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
+        r = requests.get(MODEL_URL)
+        r.raise_for_status()  # optional, raise error if download fails
+        with open(MODEL_PATH, "wb") as f:
+            f.write(r.content)
+        print("Model downloaded.")
+
+download_model()
+
+
+
+
+
 from flask import Flask, request, jsonify, render_template
 from utils.valuation import classify_price, validate_price
 from src.predict import predict_price
